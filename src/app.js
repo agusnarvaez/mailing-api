@@ -12,7 +12,7 @@ import morgan from "morgan"
 import cors from "cors"
 
 // ##### Importo rutas de la API #####
-import userRoutes from "./routes/user.routes.js"
+import mailRoutes from "./routes/mail.routes.js"
 
 // Inicializo la aplicación
 const app = express()
@@ -25,7 +25,7 @@ app.set('port',process.env.PORT || 3000)
 
 // Para que el servidor entienda cors
 app.use(cors({
-  origin: ['http://localhost:3000','http://localhost:5173','https://fontenla-quest.bapps.com.ar'],
+  origin: ['http://localhost:3000','http://localhost:5173'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
@@ -36,9 +36,9 @@ app.use(express.json()) // Para que el servidor entienda json
 // Inicializo documentación de la API
 const options = {
     definition: {
-      openapi: '3.0.0',
+      openapi: '1.0.0',
       info: {
-        title: 'API de Quest de Fontenla',
+        title: 'API para envío de mails',
         version: '1.0.0',
         description: 'Documentación de la API',
       },
@@ -48,10 +48,11 @@ const options = {
 // swaggerJSDoc genera un objeto swaggerDoc que se pasa a swaggerUi.setup
 const swaggerSpec = swaggerJSDoc(options)
 
-// Rutas de la API
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
-app.use('/users',userRoutes)
+// Rutas de la API
+/* app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+ */
+app.use('/mail',mailRoutes)
 
 console.log(
     "La versión 1 de api-docs está disponible en la ruta /api-docs"
