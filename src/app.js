@@ -25,7 +25,7 @@ app.set('port',process.env.PORT || 3000)
 
 // Para que el servidor entienda cors
 app.use(cors({
-  origin: ['http://localhost:3000','http://localhost:5173','pauladallochio.com.ar'],
+  origin: ['http://localhost:3000','http://localhost:5173','http://localhost:4200','pauladallochio.com.ar'],
   credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
