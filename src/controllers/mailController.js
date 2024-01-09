@@ -9,7 +9,8 @@ const controller = {
         try{
             // Creo un nuevo usuario con los datos del body
             const mail = new Mail(req.body.from, req.body.to, req.body.subject, req.body.message,req.body.html)
-            // Guardo el usuario en la base de datos
+            // Si existe cc, entonces lo agrego al mail, pero con if ternario
+            if (req.body.cc) mail.setCC(req.body.cc)
 
             await sendEmail(mail)
             // Devuelvo el usuario guardado
