@@ -2,11 +2,17 @@ import { SendEmailCommand } from "@aws-sdk/client-ses"
 import { sesClient } from "./awsConfig.js"
 
 export const sendEmail = async (mail) => {
+    // Creación del objeto Destination
+    const destination = {
+      ToAddresses: [mail.to]
+    }
+
+    // Añadir CcAddresses solo si mail.cc tiene un valor
+    if (mail.cc) destination.CcAddresses = [mail.cc];
+
     const emailParams = {
       Source: mail.from, // Debe ser una dirección verificada en SES
-      Destination: {
-        ToAddresses: [mail.to],
-      },
+      Destination: destination,
       Message: {
         Subject: {
           Charset: 'UTF-8',
