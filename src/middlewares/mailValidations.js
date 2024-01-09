@@ -23,6 +23,10 @@ export const validateSend = [
         .exists().bail().withMessage("El campo html no existe")
         .isString().bail().withMessage("El campo html debe ser un valor alfanumérico")
         .not().isEmpty().bail().withMessage("El campo html no debe estar vacío"),
+    check("cc")
+        .optional({nullable: true})
+        .isString().bail().withMessage("El campo cc debe ser un valor alfanumérico")
+        .not().isEmpty().bail().withMessage("El campo cc no debe estar vacío"),
     (req,res,next) => validateResult(req, res, next)
 ]
 
