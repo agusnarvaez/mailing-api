@@ -25,9 +25,9 @@ app.set('port',process.env.PORT || 3000)
 
 // Para que el servidor entienda cors
 app.use(cors({
-  origin: ['https://pauladallochio.com.ar','https://veritokillian.ar','https://testing.veritokillian.ar/'],
+  origin: ['https://pauladallochio.com.ar','https://veritokillian.ar','https://testing.veritokillian.ar/','https://djabuk.com','https://www.djabuk.com'],
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token']
 }))
 app.options('*', cors())
 app.use(morgan('dev')) // Mensaje formateado como dev
