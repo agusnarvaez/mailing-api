@@ -10,8 +10,8 @@ export const errorHandler = (error, req, res, next) => {
     return
   }
 
-  const isCorsOriginDenied =
-    error.message && error.message.startsWith('Origin not allowed by CORS:')
+  const errorMessage = typeof error.message === 'string' ? error.message : ''
+  const isCorsOriginDenied = errorMessage.startsWith('Origin not allowed by CORS:')
 
   const statusCode = error.statusCode || (isCorsOriginDenied ? 403 : 500)
   const code = error.code || (isCorsOriginDenied ? 'CORS_ORIGIN_DENIED' : 'INTERNAL_ERROR')
@@ -21,12 +21,12 @@ export const errorHandler = (error, req, res, next) => {
       path: req.originalUrl,
       method: req.method,
       code,
-      message: error.message,
+      message: errorMessage,
     })
   }
 
   res.status(statusCode).json({
-    error: error.message || 'Internal server error',
+    error: errorMessage || 'Internal server error',
     code,
   })
 }

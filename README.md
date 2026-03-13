@@ -1,5 +1,8 @@
 # Mailing Api 📧
 
+![Tests](https://github.com/agusnarvaez/mailing-api/actions/workflows/ci.yml/badge.svg)
+![Coverage](badges/coverage.svg)
+
 ## Descripción
 
 Este proyecto es un servicio de mailing propio.
@@ -61,6 +64,26 @@ Con el siguiente body:
 
 - `POST /mail/send`
 - `GET /health`
+
+## Tests
+
+La aplicación incluye una batería de tests de integración HTTP con Vitest y Supertest.
+
+```bash
+npm test
+```
+
+Para modo watch:
+
+```bash
+npm run test:watch
+```
+
+Para ejecutar cobertura (umbrales al 100% en líneas, ramas, funciones y statements):
+
+```bash
+npm run test:coverage
+```
 
 ## Registro de cuentas
 
