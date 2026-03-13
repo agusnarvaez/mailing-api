@@ -1,10 +1,6 @@
 // Importo express
 import express from 'express'
 
-// Importo el módulo de swagger para documentar la API
-import swaggerUi from 'swagger-ui-express'
-import swaggerJSDoc from 'swagger-jsdoc'
-
 // Utilizo el módulo de morgan para registrar solicitudes HTTP en la consola
 import morgan from 'morgan'
 
@@ -13,16 +9,13 @@ import cors from 'cors'
 
 // ##### Importo rutas de la API #####
 import mailRoutes from './routes/mail.routes.js'
+import { env, normalizeRequestOrigin } from './config/env.js'
+import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js'
 
 // Inicializo la aplicación
 const app = express()
 
-const allowedOrigins = new Set([
-  'https://pauladallochio.com.ar',
-  'https://www.pauladallochio.com.ar',
-  'https://veritokillian.ar',
-  'https://mendezprop.com.ar',
-])
+const allowedOrigins = new Set(env.corsOrigins)
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -31,7 +24,7 @@ const corsOptions = {
       return
     }
 
-    const normalizedOrigin = origin.replace(/\/$/, '')
+    const normalizedOrigin = normalizeRequestOrigin(origin)
 
     if (allowedOrigins.has(normalizedOrigin)) {
       callback(null, true)
@@ -47,34 +40,21 @@ const corsOptions = {
 // ### Inicializo middlewares ###
 
 // Configuro el puerto
-app.set('port', process.env.PORT || 3000)
+app.set('port', env.port)
 
 // Para que el servidor entienda cors
 app.use(cors(corsOptions))
 app.options('*', cors(corsOptions))
 app.use(morgan('dev')) // Mensaje formateado como dev
-app.use(express.json()) // Para que el servidor entienda json
-
-// Inicializo documentación de la API
-const options = {
-  definition: {
-    openapi: '1.0.0',
-    info: {
-      title: 'API para envío de mails',
-      version: '1.0.0',
-      description: 'Documentación de la API',
-    },
-  },
-  apis: ['./src/routes/user.routes.js', './src/routes/question.routes.js'],
-}
-// swaggerJSDoc genera un objeto swaggerDoc que se pasa a swaggerUi.setup
-const swaggerSpec = swaggerJSDoc(options)
+app.use(express.json({ limit: '100kb' })) // Para que el servidor entienda json
 
 // Rutas de la API
-/* app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
- */
-app.use('/mail', mailRoutes)
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' })
+})
 
-console.log('La versión 1 de api-docs está disponible en la ruta /api-docs')
+app.use('/mail', mailRoutes)
+app.use(notFoundHandler)
+app.use(errorHandler)
 
 export default app

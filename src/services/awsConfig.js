@@ -1,15 +1,38 @@
-import { SESClient } from "@aws-sdk/client-ses"
+import { SESClient } from '@aws-sdk/client-ses'
 
-import dotenv from "dotenv"
+import { AppError } from '../errors/AppError.js'
+import { env } from '../config/env.js'
 
-dotenv.config()
+let sesClient
 
-const SES_CONFIG = {
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY,
-    secretAccessKey: process.env.AWS_ACCESS_KEY_SECRET,
-  },
-  region: process.env.AWS_ACCESS_KEY_REGION
+const buildSesConfig = () => {
+  const { accessKeyId, secretAccessKey, region } = env.aws
+  const missingConfig = [
+    ['AWS_ACCESS_KEY_ID', accessKeyId],
+    ['AWS_SECRET_ACCESS_KEY', secretAccessKey],
+    ['AWS_REGION', region],
+  ].filter(([, value]) => !value)
+
+  if (missingConfig.length > 0) {
+    throw new AppError('AWS SES configuration is incomplete', {
+      statusCode: 500,
+      code: 'AWS_SES_CONFIG_ERROR',
+    })
+  }
+
+  return {
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+    region,
+  }
 }
 
-export const sesClient = new SESClient(SES_CONFIG)
+export const getSesClient = () => {
+  if (!sesClient) {
+    sesClient = new SESClient(buildSesConfig())
+  }
+
+  return sesClient
+}

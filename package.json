@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./index.js",
-    "dev": "nodemon ./index.js"
+    "dev": "nodemon ./index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "coverage:badge": "node ./scripts/generate-coverage-badge.js",
+    "test:ci": "npm run test:coverage && npm run coverage:badge"
   },
   "author": "Agustín Narvaez",
   "dependencies": {
@@ -21,6 +26,10 @@
   "type": "module",
   "devDependencies": {
     "@flydotio/dockerfile": "^0.4.9",
-    "nodemon": "^3.0.1"
+    "@vitest/coverage-v8": "^4.1.0",
+    "nodemon": "^3.0.1",
+    "supertest": "^7.2.2",
+    "vitest": "^4.1.0",
+    "yaml": "^2.8.2"
   }
 }
