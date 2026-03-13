@@ -1,42 +1,51 @@
-import { SendEmailCommand } from "@aws-sdk/client-ses"
-import { sesClient } from "./awsConfig.js"
+import { SendEmailCommand } from '@aws-sdk/client-ses'
+
+import { MailDeliveryError } from '../errors/AppError.js'
+import { getSesClient } from './awsConfig.js'
+
+const buildDestination = (mail) => {
+  const destination = {
+    ToAddresses: [mail.to],
+  }
+
+  if (mail.cc) {
+    destination.CcAddresses = [mail.cc]
+  }
+
+  return destination
+}
+
+const buildEmailParams = (mail) => ({
+  Source: mail.from,
+  Destination: buildDestination(mail),
+  Message: {
+    Subject: {
+      Charset: 'UTF-8',
+      Data: mail.subject,
+    },
+    Body: {
+      Html: {
+        Charset: 'UTF-8',
+        Data: mail.html,
+      },
+      Text: {
+        Charset: 'UTF-8',
+        Data: mail.body,
+      },
+    },
+  },
+})
 
 export const sendEmail = async (mail) => {
-    // Creación del objeto Destination
-    const destination = {
-      ToAddresses: [mail.to]
-    }
+  try {
+    const sendEmailCommand = new SendEmailCommand(buildEmailParams(mail))
+    return await getSesClient().send(sendEmailCommand)
+  } catch (error) {
+    console.error('SES sendEmail failed', {
+      name: error.name,
+      message: error.message,
+    })
 
-    // Añadir CcAddresses solo si mail.cc tiene un valor
-    if (mail.cc) destination.CcAddresses = [mail.cc];
-
-    const emailParams = {
-      Source: mail.from, // Debe ser una dirección verificada en SES
-      Destination: destination,
-      Message: {
-        Subject: {
-          Charset: 'UTF-8',
-          Data: mail.subject
-        },
-        Body: {
-          Html: {
-            Charset: 'UTF-8',
-            Data: `${mail.html}`
-          },
-          Text: {
-            Charset: 'UTF-8',
-            Data: mail.body
-          }
-        }
-      }
-    }
-
-    try{
-      const sendEmailCommand = new SendEmailCommand(emailParams)
-      const res = await sesClient.send(sendEmailCommand)
-      console.log('The email has been sent!',res)
-    }catch(error){
-      console.log(error)
-      throw new Error(error)
-    }
+    throw new MailDeliveryError(undefined, { cause: error })
+  }
 }

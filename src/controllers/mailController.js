@@ -5,19 +5,15 @@ import {sendEmail} from "../services/mailService.js"
 import {Mail} from '../models/mail.js'
 
 const controller = {
-    send: async (req, res) => {
+    send: async (req, res, next) => {
         try{
-            // Creo un nuevo usuario con los datos del body
-            const mail = new Mail(req.body.from, req.body.to, req.body.subject, req.body.message,req.body.html)
-            // Si existe cc, entonces lo agrego al mail, pero con if ternario
-            if (req.body.cc) mail.setCC(req.body.cc)
+            const mail = Mail.fromRequest(req.body)
+            const response = await sendEmail(mail)
 
-            await sendEmail(mail)
-            // Devuelvo el usuario guardado
-            res.status(201).json({message: "Mail sent"})
+            res.status(201).json({message: "Mail sent", messageId: response.MessageId})
         }
         catch(err){
-            res.status(400).json({error: err.message})
+            next(err)
         }
     }
 }
