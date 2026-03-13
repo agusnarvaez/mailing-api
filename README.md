@@ -40,6 +40,14 @@ Con el siguiente body:
     "html": "html"
 }
 ```
+## Registro de cuentas
+Para utilizar el servicio de mailing, es necesario registrar una cuenta en AWS y configurar el servicio de SES (Simple Email Service).
+1. Crear una cuenta en AWS: https://aws.amazon.com/
+2. Configurar el servicio de SES: https://docs.aws.amazon.com/ses/latest/
+3. Obtener las credenciales de acceso (Access Key ID y Secret Access Key) y la región.
+4. Configurar las variables de entorno en el archivo .env.
+5. Ingresar a Identidades para 
+
 ## Autor
 - Agustín Narvaez
   - [GitHub](https://github.com/agusnarvaez)
