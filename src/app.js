@@ -17,27 +17,41 @@ import mailRoutes from './routes/mail.routes.js'
 // Inicializo la aplicación
 const app = express()
 
+const allowedOrigins = new Set([
+  'https://pauladallochio.com.ar',
+  'https://www.pauladallochio.com.ar',
+  'https://veritokillian.ar',
+  'https://mendezprop.com.ar',
+])
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) {
+      callback(null, true)
+      return
+    }
+
+    const normalizedOrigin = origin.replace(/\/$/, '')
+
+    if (allowedOrigins.has(normalizedOrigin)) {
+      callback(null, true)
+      return
+    }
+
+    callback(new Error(`Origin not allowed by CORS: ${origin}`))
+  },
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
+}
+
 // ### Inicializo middlewares ###
 
 // Configuro el puerto
 app.set('port', process.env.PORT || 3000)
 
 // Para que el servidor entienda cors
-app.use(
-  cors({
-    origin: [
-      'https://pauladallochio.com.ar',
-      'https://veritokillian.ar',
-      'https://testing.veritokillian.ar/',
-      'https://djabuk.com',
-      'https://www.djabuk.com',
-      'https://mendezprop.com.ar',
-    ],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
-  })
-)
-app.options('*', cors())
+app.use(cors(corsOptions))
+app.options('*', cors(corsOptions))
 app.use(morgan('dev')) // Mensaje formateado como dev
 app.use(express.json()) // Para que el servidor entienda json
 
