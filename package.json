@@ -10,6 +10,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "coverage:badge": "node ./scripts/generate-coverage-badge.js",
+    "deployment:badge": "node ./scripts/generate-deployment-badge.js",
     "test:ci": "npm run test:coverage && npm run coverage:badge"
   },
   "author": "Agustín Narvaez",
