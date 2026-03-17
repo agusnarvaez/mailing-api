@@ -6,6 +6,7 @@ const DEFAULT_CORS_ORIGINS = [
   'https://pauladallochio.com.ar',
   'https://www.pauladallochio.com.ar',
   'https://veritokillian.ar',
+  'https://www.veritokillian.ar',
   'https://mendezprop.com.ar',
 ]
 
