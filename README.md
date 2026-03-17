@@ -1,7 +1,10 @@
 # Mailing Api 📧
 
-![Tests](https://github.com/agusnarvaez/mailing-api/actions/workflows/ci.yml/badge.svg)
-![Coverage](badges/coverage.svg)
+[![Build](https://github.com/agusnarvaez/mailing-api/actions/workflows/ci.yml/badge.svg)](https://github.com/agusnarvaez/mailing-api/actions)
+[![Coverage](badges/coverage.svg)](#tests)
+[![Node.js](https://img.shields.io/badge/Node.js-v20-green)](https://nodejs.org)
+[![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
+[![Deployed on Fly.io](https://img.shields.io/badge/Deployed%20on-Fly.io-7B3FF2)](https://mailing-api.fly.dev)
 
 ## Descripción
 
