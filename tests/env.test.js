@@ -30,6 +30,7 @@ describe('env config', () => {
     const { env } = await loadEnvModule()
 
     expect(env.port).toBe(3000)
+    expect(env.corsOrigins).toContain('https://bapps.com.ar')
     expect(env.corsOrigins).toContain('https://www.pauladallochio.com.ar')
   })
 
