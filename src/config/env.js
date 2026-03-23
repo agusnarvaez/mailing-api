@@ -3,6 +3,8 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 const DEFAULT_CORS_ORIGINS = [
+  'https://bapps.com.ar',
+  'https://www.bapps.com.ar',
   'https://pauladallochio.com.ar',
   'https://www.pauladallochio.com.ar',
   'https://veritokillian.ar',
