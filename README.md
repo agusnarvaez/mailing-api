@@ -39,7 +39,13 @@ npm install
 2. Create a local `.env` file from the provided example.
 
 ```bash
-copy .env.example .env
+cp .env.example .env
+```
+
+On Windows PowerShell you can also run:
+
+```powershell
+Copy-Item .env.example .env
 ```
 
 3. Start the API.
@@ -100,6 +106,7 @@ npm run test:ci
 - HTTP integration and unit-style tests run with Vitest and Supertest.
 - Coverage reporting is part of CI and updates the local badge asset.
 - The repo now includes `.env.example` to make local setup reproducible without exposing secrets.
+- The dependency manifest was trimmed to the packages the runtime and scripts actually use.
 
 ## Deployment
 
