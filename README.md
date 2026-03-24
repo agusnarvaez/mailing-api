@@ -1,33 +1,56 @@
-# Mailing Api 📧
+# mailing-api
 
-[![Build](https://github.com/agusnarvaez/mailing-api/actions/workflows/ci.yml/badge.svg)](https://github.com/agusnarvaez/mailing-api/actions)
-[![Coverage](badges/coverage.svg)](#tests)
-[![Node.js](https://img.shields.io/badge/Node.js-v20-green)](https://nodejs.org)
-[![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
-[![Deployed on Fly.io](https://img.shields.io/badge/Deployed%20on-Fly.io-7B3FF2)](https://mailing-api.fly.dev)
-[![Deployment Status](badges/deployment-status.svg)](#deployment)
+[![Build](https://github.com/agusnarvaez/mailing-api/actions/workflows/ci.yml/badge.svg)](https://github.com/agusnarvaez/mailing-api/actions/workflows/ci.yml)
+[![Coverage](./badges/coverage.svg)](#quality-and-testing)
+[![Deployment Status](./badges/deployment-status.svg)](#deployment)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Fly.io](https://img.shields.io/badge/Deploy-Fly.io-7B3FF2)](https://fly.io/)
 
-## Descripción
+Transactional mailing API built with Express and AWS SES, with HTTP tests, coverage reporting, and a lightweight deployment flow.
 
-Este proyecto es un servicio de mailing propio.
+API transaccional de mailing construida con Express y AWS SES, con tests HTTP, reporte de cobertura y un flujo liviano de despliegue.
 
-## Tecnologías
+## Overview
 
-- Node.js: V20.1.0
-- Express: V4.18.2
-- express-validator: V7.0.1
+### ES
+
+`mailing-api` expone un endpoint para enviar correos y un endpoint de salud, con validaciones, manejo centralizado de errores y configuracion de CORS basada en variables de entorno.
+
+### EN
+
+`mailing-api` exposes a mail-sending endpoint plus a health endpoint, with request validation, centralized error handling, and CORS configuration driven by environment variables.
+
+## Stack
+
+- Node.js 20+
+- Express
 - AWS SES
+- Vitest + Supertest
+- Fly.io
 
-## Instalación
+## Setup
 
-1. Clonar el repositorio.
-1. Instalar las dependencias.
+1. Install dependencies.
 
 ```bash
 npm install
 ```
 
-1. Crear un archivo `.env` en la raíz del proyecto con las siguientes variables de entorno:
+2. Create a local `.env` file from the provided example.
+
+```bash
+copy .env.example .env
+```
+
+3. Start the API.
+
+```bash
+npm run dev
+```
+
+The default URL is `http://localhost:3000`.
+
+## Environment Variables
 
 ```bash
 PORT=3000
@@ -37,21 +60,18 @@ AWS_SECRET_ACCESS_KEY=YOUR_AWS_SECRET_ACCESS_KEY
 AWS_REGION=YOUR_AWS_REGION
 ```
 
-También se soportan las variables legacy `AWS_ACCESS_KEY`, `AWS_ACCESS_KEY_SECRET` y `AWS_ACCESS_KEY_REGION` por compatibilidad.
+Legacy keys are still supported for backward compatibility:
 
-1. Iniciar el servidor.
+- `AWS_ACCESS_KEY`
+- `AWS_ACCESS_KEY_SECRET`
+- `AWS_ACCESS_KEY_REGION`
 
-```bash
-npm start
-```
+## API Surface
 
-1. Realizar una petición `POST` a la siguiente URL:
+- `POST /mail/send`
+- `GET /health`
 
-```bash
-http://localhost:3000/mail/send
-```
-
-Con el siguiente body:
+Example request body:
 
 ```json
 {
@@ -64,47 +84,40 @@ Con el siguiente body:
 }
 ```
 
-## Endpoints
-
-- `POST /mail/send`
-- `GET /health`
-
-## Tests
-
-La aplicación incluye una batería de tests de integración HTTP con Vitest y Supertest.
+## Scripts
 
 ```bash
-npm test
-```
-
-Para modo watch:
-
-```bash
+npm run start
+npm run dev
+npm run test
 npm run test:watch
-```
-
-Para ejecutar cobertura (umbrales al 100% en líneas, ramas, funciones y statements):
-
-```bash
 npm run test:coverage
+npm run test:ci
 ```
 
-## Registro de cuentas
+## Quality and Testing
 
-Para utilizar el servicio de mailing, es necesario registrar una cuenta en AWS y configurar el servicio de SES (Simple Email Service).
+- HTTP integration and unit-style tests run with Vitest and Supertest.
+- Coverage reporting is part of CI and updates the local badge asset.
+- The repo now includes `.env.example` to make local setup reproducible without exposing secrets.
 
-1. Crear una cuenta en AWS: [aws.amazon.com](https://aws.amazon.com/).
-2. Configurar el servicio de SES: [docs.aws.amazon.com/ses/latest](https://docs.aws.amazon.com/ses/latest/).
-3. Obtener las credenciales de acceso y la región.
-4. Configurar las variables de entorno en el archivo `.env`.
-5. Verificar remitentes o dominios en SES antes de enviar correos desde producción.
+## Deployment
 
-## Autor
+- Production deployment target: Fly.io
+- CI workflow validates the test suite with coverage on pushes to `main`, `dev`, and pull requests
 
-- Agustín Narvaez
+## Operational Notes
+
+- Verify senders or domains in AWS SES before using the service in production.
+- Keep CORS origins synchronized with the domains that consume the API.
+- Avoid changing environment variable names unless you also update the compatibility layer in `src/config/env.js`.
+
+## Author
+
+- Agustin Narvaez
 - [GitHub](https://github.com/agusnarvaez)
 - [LinkedIn](https://www.linkedin.com/in/narvaezagustin/)
 
-## Licencia
+## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+MIT. See [LICENSE](./LICENSE).
