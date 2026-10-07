@@ -5,11 +5,15 @@ dotenv.config()
 const DEFAULT_CORS_ORIGINS = [
   'https://bapps.com.ar',
   'https://www.bapps.com.ar',
+  'https://bapps-803f0.web.app',
+  'https://bapps-803f0.firebaseapp.com',
   'https://pauladallochio.com.ar',
   'https://www.pauladallochio.com.ar',
   'https://veritokillian.ar',
   'https://www.veritokillian.ar',
   'https://mendezprop.com.ar',
+  'https://azimap.bapps.com.ar',
+  // TODO: cuando el dominio migre a azimap.com.ar, agregar acá
 ]
 
 const normalizeOrigin = (origin) => origin.replace(/\/$/, '')
