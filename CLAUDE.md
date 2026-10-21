@@ -43,3 +43,12 @@ npm run test:coverage
 1. Add request examples to Swagger and link them from the README.
 2. Add a smoke deployment check after Fly.io releases.
 3. Split CI into test and badge-generation jobs if artifact handling becomes more complex.
+
+<!-- dotclaude -->
+## Harness: dotclaude
+
+Este repo se trabaja con la config de Claude Code / Codex de [agusnarvaez/dotclaude](https://github.com/agusnarvaez/dotclaude)
+(privado): reglas compartidas, headroom (compresión de contexto) y graphify (grafo de código).
+
+- PC nueva: `gh repo clone agusnarvaez/dotclaude ~/.claude-sync && bash ~/.claude-sync/bin/bootstrap.sh`
+- Verificar: `headroom doctor`. Las reglas globales viven en `~/.claude/rules/` (Codex: `~/.codex/AGENTS.md`).
