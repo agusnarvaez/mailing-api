@@ -79,13 +79,13 @@ describe('Mailing API', () => {
   it('OPTIONS /mail/send permite origin whitelisteado', async () => {
     const response = await request(app)
       .options('/mail/send')
-      .set('Origin', 'https://www.pauladallochio.com.ar')
+      .set('Origin', 'https://www.bapps.com.ar')
       .set('Access-Control-Request-Method', 'POST')
       .set('Access-Control-Request-Headers', 'Content-Type')
 
     expect(response.status).toBe(204)
     expect(response.headers['access-control-allow-origin']).toBe(
-      'https://www.pauladallochio.com.ar'
+      'https://www.bapps.com.ar'
     )
   })
 
