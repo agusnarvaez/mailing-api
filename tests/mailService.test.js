@@ -62,6 +62,7 @@ describe('mailService', () => {
       body: 'Texto',
       html: '<p>Texto</p>',
       cc: 'copy@example.com',
+      replyTo: 'visitante@example.com',
     })
 
     const payload = sendEmailCommandMock.mock.calls[0][0]
@@ -69,6 +70,7 @@ describe('mailService', () => {
       ToAddresses: ['receiver@example.com'],
       CcAddresses: ['copy@example.com'],
     })
+    expect(payload.ReplyToAddresses).toEqual(['visitante@example.com'])
   })
 
   it('transforma errores de SES en MailDeliveryError', async () => {

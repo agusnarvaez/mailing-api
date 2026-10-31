@@ -1,51 +1,14 @@
-// Importaciones de paquetes
 import express from "express"
 const router = express.Router()
 
-// Controllers
 import mailController from "../controllers/mailController.js"
+import { validateForm, validateSend } from "../middlewares/mailValidations.js"
+import { rateLimit, requireApiKey, requireSiteOrigin } from "../middlewares/security.js"
 
-// Importo middleware de validaciones
-import { validateSend } from "../middlewares/mailValidations.js"
+// Formularios de los sitios: mandan sólo datos, el HTML lo arma la API (src/services/formMail.js).
+router.post('/form', rateLimit({ max: 5, windowMs: 10 * 60_000 }), validateForm, requireSiteOrigin, mailController.form)
 
-/**
- * @openapi
- * /users:
- *  post:
- *      tags:
- *      - Usuarios
- *      description: Agrega un usuario
- *      requestBody:
- *       content:
- *        application/json:
- *         schema:
- *          $ref: '#/components/schemas/User'
- *      responses:
- *        200:
- *         description: Created
- *         content:
- *          application/json:
- *           schema:
- *            $ref: '#/components/schemas/User'
- *        400:
- *          description: Bad Request
- * components:
- *  schemas:
- *    Mail:
- *     type: object
- *     properties:
- *      name:
- *       type: string
- *      responses:
- *       type: array
- *       items:
- *        type: object
- *        properties:
- *          question:
- *           type: string
- *          response:
- *           type: string
- */
-router.post('/send',validateSend,mailController.send) // Ruta para crear usuario
+// Envío libre (HTML, remitente y destinatario a elección): sólo con x-api-key.
+router.post('/send', requireApiKey, validateSend, mailController.send)
 
 export default router

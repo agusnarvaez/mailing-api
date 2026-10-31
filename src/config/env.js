@@ -42,6 +42,7 @@ const getFirstDefinedEnv = (...keys) => {
 export const env = {
   port: Number(process.env.PORT) || 3000,
   corsOrigins: parseOrigins(process.env.CORS_ALLOWED_ORIGINS),
+  mailApiKey: process.env.MAIL_API_KEY ?? '',
   aws: {
     accessKeyId: getFirstDefinedEnv('AWS_ACCESS_KEY_ID', 'AWS_ACCESS_KEY'),
     secretAccessKey: getFirstDefinedEnv('AWS_SECRET_ACCESS_KEY', 'AWS_ACCESS_KEY_SECRET'),
