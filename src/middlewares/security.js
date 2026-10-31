@@ -24,15 +24,17 @@ export const requireSiteOrigin = (req, res, next) => {
 
 // ponytail: memoria de un solo proceso (Fly corre una máquina); si se escala, pasar a Redis o al rate limit de Fly.
 export const rateLimit = ({ max, windowMs }) => {
-  const hits = new Map()
+  let hits = new Map()
+  let desde = Date.now()
   return (req, res, next) => {
-    const ahora = Date.now()
-    const previo = hits.get(req.ip)
-    const entrada = previo && ahora - previo.desde < windowMs ? previo : { desde: ahora, n: 0 }
-    entrada.n += 1
-    hits.set(req.ip, entrada)
-    if (hits.size > 10_000) hits.clear()
-    if (entrada.n <= max) return next()
+    // Ventana fija: al vencer se arranca de cero, así el Map no crece sin límite.
+    if (Date.now() - desde >= windowMs) {
+      hits = new Map()
+      desde = Date.now()
+    }
+    const n = (hits.get(req.ip) ?? 0) + 1
+    hits.set(req.ip, n)
+    if (n <= max) return next()
     res.status(429).json({ error: 'Demasiados envíos, probá en unos minutos', code: 'RATE_LIMITED' })
   }
 }

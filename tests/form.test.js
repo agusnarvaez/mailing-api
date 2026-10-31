@@ -9,6 +9,7 @@ vi.mock('../src/services/mailService.js', () => ({
 
 import app from '../src/app.js'
 import { env } from '../src/config/env.js'
+import { MailDeliveryError } from '../src/errors/AppError.js'
 
 const contacto = {
   site: 'mendezprop',
@@ -103,12 +104,47 @@ describe('POST /mail/form', () => {
     expect(sendEmailMock).not.toHaveBeenCalled()
   })
 
-  it('corta después de 5 envíos por IP', async () => {
-    const enviar = () =>
-      request(app).post('/mail/form').set('X-Forwarded-For', '10.9.9.9').send(contacto)
-    for (let i = 0; i < 5; i++) expect((await enviar()).status).toBe(201)
+  it('corta después de 5 envíos por IP y vuelve a dejar pasados 10 minutos', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    try {
+      const enviar = () =>
+        request(app).post('/mail/form').set('X-Forwarded-For', '10.9.9.9').send(contacto)
+      for (let i = 0; i < 5; i++) expect((await enviar()).status).toBe(201)
+      expect((await enviar()).status).toBe(429)
 
-    expect((await enviar()).status).toBe(429)
+      vi.setSystemTime(Date.now() + 10 * 60_000)
+      expect((await enviar()).status).toBe(201)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+
+  it('descarta un link que se va del sitio aunque parezca una ruta', async () => {
+    const res = await post({ ...contacto, link: '/\\phishing.example' })
+
+    expect(res.status).toBe(201)
+    expect(sendEmailMock.mock.calls[0][0].html).not.toContain('Ver publicación')
+  })
+
+  it('sin nombre ni mensaje el mail igual se arma', async () => {
+    await post({ site: 'mendezprop', subject: 'Consulta', email: 'ana@example.com' })
+
+    const [[aviso], [confirmacion]] = sendEmailMock.mock.calls
+    expect(aviso.subject).toBe('Consulta')
+    expect(confirmacion.html).toContain('Hola! - Gracias')
+  })
+
+  it('devuelve 502 si SES no puede mandar el aviso', async () => {
+    sendEmailMock.mockRejectedValue(new MailDeliveryError('SES unavailable'))
+
+    expect((await post(contacto)).status).toBe(502)
+  })
+
+  it('si falla sólo la confirmación al visitante, el envío cuenta como hecho', async () => {
+    sendEmailMock.mockResolvedValueOnce({ MessageId: 'msg-1' }).mockRejectedValueOnce(new Error('rebote'))
+
+    expect((await post(contacto)).status).toBe(201)
+    expect(sendEmailMock).toHaveBeenCalledTimes(2)
   })
 })
 

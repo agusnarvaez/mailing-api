@@ -3,7 +3,7 @@ import { Mail } from '../models/mail.js'
 const ENTIDADES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }
 
 // Todo lo que llega del formulario se muestra como texto, nunca como HTML.
-export const escapeHtml = (valor) => String(valor ?? '').replace(/[&<>"']/g, (c) => ENTIDADES[c])
+export const escapeHtml = (valor) => String(valor).replace(/[&<>"']/g, (c) => ENTIDADES[c])
 
 // El asunto va en un header: sin saltos de línea.
 const enUnaLinea = (valor) => String(valor).replace(/\s+/g, ' ')
