@@ -97,6 +97,22 @@ describe('POST /mail/form', () => {
     expect(sendEmailMock).not.toHaveBeenCalled()
   })
 
+  it('desde testing el aviso le llega sólo a Agustín', async () => {
+    const res = await post(contacto, { Origin: 'https://mendez-prop-testing.bapps.com.ar' })
+
+    expect(res.status).toBe(201)
+    expect(sendEmailMock.mock.calls[0][0]).toMatchObject({ to: 'agus.narvaez@outlook.com', cc: null })
+  })
+
+  it('CORS deja pasar el testing de cada sitio', async () => {
+    const res = await request(app)
+      .options('/mail/form')
+      .set('Origin', 'https://azimap-testing.bapps.com.ar')
+      .set('Access-Control-Request-Method', 'POST')
+
+    expect(res.headers['access-control-allow-origin']).toBe('https://azimap-testing.bapps.com.ar')
+  })
+
   it('rechaza el formulario de un sitio mandado desde otro dominio', async () => {
     const res = await post(contacto, { Origin: 'https://veritokillian.ar' })
 

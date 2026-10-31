@@ -1,6 +1,7 @@
 // Cada sitio manda sólo datos a /mail/form: el remitente, a quién le llega y cómo se ve el mail se definen acá.
 // Así nadie puede usar la API para mandar HTML propio ni elegir remitente o destinatario.
-const CC_AGUS = 'agus.narvaez@outlook.com'
+// Desde `testing` el aviso le llega sólo a Agustín, para que las pruebas no le lleguen al cliente.
+export const CC_AGUS = 'agus.narvaez@outlook.com'
 
 export const SITES = {
   mendezprop: {
@@ -8,6 +9,7 @@ export const SITES = {
     to: 'mendezprop.inmobiliaria@gmail.com',
     cc: CC_AGUS,
     url: 'https://mendezprop.com.ar',
+    testing: 'https://mendez-prop-testing.bapps.com.ar',
     origins: ['https://mendezprop.com.ar', 'https://www.mendezprop.com.ar'],
     greeting: 'Hola!',
     confirm: true,
@@ -22,6 +24,7 @@ export const SITES = {
     to: 'info@pauladallochio.com.ar',
     cc: CC_AGUS,
     url: 'https://www.pauladallochio.com.ar',
+    testing: 'https://pau-dallochio-testing.bapps.com.ar',
     origins: ['https://pauladallochio.com.ar', 'https://www.pauladallochio.com.ar'],
     greeting: 'Hola Paula!',
     confirm: true,
@@ -33,6 +36,7 @@ export const SITES = {
     to: 'inmobiliaria@veritokillian.ar',
     cc: CC_AGUS,
     url: 'https://www.veritokillian.ar',
+    testing: 'https://vero-killian-testing.bapps.com.ar',
     origins: ['https://veritokillian.ar', 'https://www.veritokillian.ar'],
     greeting: 'Hola Vero!',
     confirm: true,
@@ -43,6 +47,7 @@ export const SITES = {
     from: 'no_reply@bapps.com.ar',
     to: CC_AGUS,
     url: 'https://bapps.com.ar',
+    testing: 'https://bapps-front-testing.bapps.com.ar',
     origins: [
       'https://bapps.com.ar',
       'https://www.bapps.com.ar',
@@ -58,6 +63,7 @@ export const SITES = {
     from: 'noreply@azimap.bapps.com.ar',
     to: CC_AGUS,
     url: 'https://azimap.bapps.com.ar',
+    testing: 'https://azimap-testing.bapps.com.ar',
     origins: ['https://azimap.bapps.com.ar'],
     greeting: 'Hola!',
     confirm: false,
