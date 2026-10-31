@@ -20,6 +20,7 @@ describe('domain objects', () => {
       body: 'Texto',
       html: '<p>Texto</p>',
       cc: null,
+      replyTo: null,
     })
   })
 

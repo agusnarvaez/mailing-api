@@ -34,13 +34,15 @@ const corsOptions = {
     callback(new Error(`Origin not allowed by CORS: ${origin}`))
   },
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-csrf-token', 'x-api-key'],
 }
 
 // ### Inicializo middlewares ###
 
 // Configuro el puerto
 app.set('port', env.port)
+// Fly agrega un proxy adelante: req.ip tiene que ser la IP del visitante para el rate limit
+app.set('trust proxy', 1)
 
 // Para que el servidor entienda cors
 app.use(cors(corsOptions))

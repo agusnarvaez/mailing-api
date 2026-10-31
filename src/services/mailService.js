@@ -18,6 +18,7 @@ const buildDestination = (mail) => {
 const buildEmailParams = (mail) => ({
   Source: mail.from,
   Destination: buildDestination(mail),
+  ...(mail.replyTo && { ReplyToAddresses: [mail.replyTo] }),
   Message: {
     Subject: {
       Charset: 'UTF-8',

@@ -64,6 +64,8 @@ CORS_ALLOWED_ORIGINS=https://pauladallochio.com.ar,https://www.pauladallochio.co
 AWS_ACCESS_KEY_ID=YOUR_AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY=YOUR_AWS_SECRET_ACCESS_KEY
 AWS_REGION=YOUR_AWS_REGION
+# Si está, /mail/send exige el header x-api-key con este valor (Bitwarden: "mailing-api MAIL_API_KEY")
+MAIL_API_KEY=
 ```
 
 Legacy keys are still supported for backward compatibility:
@@ -74,10 +76,30 @@ Legacy keys are still supported for backward compatibility:
 
 ## API Surface
 
-- `POST /mail/send`
+- `POST /mail/form`: formularios de los sitios. Mandan sólo datos; el remitente, el destinatario y el HTML los define
+  la API según `site` (`src/config/sites.js`). Todo lo que llega se escapa. Límite: 5 envíos cada 10 minutos por IP.
+- `POST /mail/send`: envío libre (HTML, remitente y destinatario a elección). Sólo para servers, con `x-api-key`.
 - `GET /health`
 
-Example request body:
+`/mail/form`:
+
+```json
+{
+  "site": "mendezprop",
+  "subject": "Consulta General",
+  "name": "Juan Perez",
+  "email": "juan@example.com",
+  "phone": "1234567890",
+  "message": "Hola, quería consultar...",
+  "fields": [{ "label": "Propiedad", "value": "Casa en Moreno - USD 100.000" }],
+  "link": "/catalogo/123"
+}
+```
+
+Sólo `site` y `subject` son obligatorios. Con `email`, y si el sitio tiene `confirm: true`, también le llega una
+confirmación al visitante. `link` tiene que ser una ruta del propio sitio. Sitio nuevo: agregarlo en `src/config/sites.js`.
+
+`/mail/send` (header `x-api-key`):
 
 ```json
 {
