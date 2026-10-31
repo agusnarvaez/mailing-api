@@ -10,12 +10,17 @@ import cors from 'cors'
 // ##### Importo rutas de la API #####
 import mailRoutes from './routes/mail.routes.js'
 import { env, normalizeRequestOrigin } from './config/env.js'
+import { SITES } from './config/sites.js'
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js'
 
 // Inicializo la aplicación
 const app = express()
 
-const allowedOrigins = new Set(env.corsOrigins)
+// Además de CORS_ALLOWED_ORIGINS, cada sitio de src/config/sites.js (prod y testing) puede llamar a la API.
+const allowedOrigins = new Set([
+  ...env.corsOrigins,
+  ...Object.values(SITES).flatMap((site) => [...site.origins, site.testing]),
+])
 
 const corsOptions = {
   origin: (origin, callback) => {

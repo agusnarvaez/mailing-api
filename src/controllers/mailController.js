@@ -1,6 +1,6 @@
 import {sendEmail} from "../services/mailService.js"
 import {buildFormMails} from "../services/formMail.js"
-import {SITES} from "../config/sites.js"
+import {CC_AGUS, SITES} from "../config/sites.js"
 
 import {Mail} from '../models/mail.js'
 
@@ -18,7 +18,9 @@ const controller = {
     },
     form: async (req, res, next) => {
         try{
-            const [notification, confirmation] = buildFormMails(SITES[req.body.site], req.body)
+            const site = SITES[req.body.site]
+            const desdeTesting = req.get('origin') === site.testing
+            const [notification, confirmation] = buildFormMails(desdeTesting ? {...site, to: CC_AGUS, cc: null} : site, req.body)
             const response = await sendEmail(notification)
             // La confirmación al visitante es secundaria: si falla, el mensaje igual llegó.
             if (confirmation) await sendEmail(confirmation).catch(() => {})

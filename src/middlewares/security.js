@@ -18,7 +18,7 @@ export const requireApiKey = (req, res, next) => {
 export const requireSiteOrigin = (req, res, next) => {
   const origin = req.get('origin')
   const site = SITES[req.body.site]
-  if (!origin || site.origins.includes(origin.replace(/\/$/, '')) || /^http:\/\/localhost(:\d+)?$/.test(origin)) return next()
+  if (!origin || [...site.origins, site.testing].includes(origin.replace(/\/$/, '')) || /^http:\/\/localhost(:\d+)?$/.test(origin)) return next()
   res.status(403).json({ error: 'Origen no permitido para este sitio', code: 'FORBIDDEN_ORIGIN' })
 }
 
